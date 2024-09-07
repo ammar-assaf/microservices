@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Results</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<h1>Results</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Max</th>
+        <th>Min</th>
+        <th>Count</th>
+        <th>Avg</th>
+        <th>Sum</th>
+        <th>Std</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="result : ${results}">
+        <td th:text="${result.max}">Max</td>
+        <td th:text="${result.min}">Min</td>
+        <td th:text="${result.count}">Count</td>
+        <td th:text="${result.avg}">Avg</td>
+        <td th:text="${result.sum}">Sum</td>
+        <td th:text="${result.std}">Std</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
