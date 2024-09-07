@@ -1,0 +1,89 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:latest
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: Admin@123
+          MYSQL_DATABASE: mydb
+          MYSQL_USER: admin
+          MYSQL_PASSWORD: Admin@123
+        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=5
+      
+      mongo:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+        options: --health-cmd="mongo --eval 'db.runCommand({ ping: 1 })'" --health-interval=10s
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Java JDK
+      uses: actions/setup-java@v3
+      with:
+        java-version: 18
+        distribution: 'temurin'  # Use 'temurin', 'adoptopenjdk', or other valid distributions
+
+    - name: Build Authentication Service
+      run: |
+        cd AuthenticationService
+        mvn clean package
+
+    - name: Build Data Entry Service
+      run: |
+        cd DataEntryService
+        mvn clean package
+
+    - name: Build Show Results Service
+      run: |
+        cd ShowResultsService
+        mvn clean package
+
+    - name: Build Analytics Service
+      run: |
+        cd AnalyticsService
+        mvn clean package
+
+    - name: Build Docker images
+      run: |
+        docker-compose -f docker-compose.yml build
+
+    - name: Run Unit Tests
+      run: |
+        cd AuthenticationService && mvn test
+        cd ../DataEntryService && mvn test
+        cd ../ShowResultsService && mvn test
+        cd ../AnalyticsService && mvn test
+
+    - name: Push Docker images to Docker Hub
+      if: github.ref == 'refs/heads/main'
+      run: |
+        echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+        docker tag authenticationservice:latest ammar795/authenticationservice:latest
+        docker tag dataentryservice:latest ammar795/dataentryservice:latest
+        docker tag showresultsservice:latest ammar795/showresultsservice:latest
+        docker tag analyticsservice:latest ammar795/analyticsservice:latest
+        docker tag mysqldbservice:latest ammar795/mysqldbservice:latest
+        docker tag mongodbservice:latest ammar795/mongodbservice:latest
+        docker push ammar795/authenticationservice:latest
+        docker push ammar795/dataentryservice:latest
+        docker push ammar795/showresultsservice:latest
+        docker push ammar795/analyticsservice:latest
+        docker push ammar795/mysqldbservice:latest
+        docker push ammar795/mongodbservice:latest
