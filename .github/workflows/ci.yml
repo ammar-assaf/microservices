@@ -82,7 +82,11 @@ jobs:
         docker tag dataentryservice:latest ammar795/dataentryservice:latest
         docker tag showresultsservice:latest ammar795/showresultsservice:latest
         docker tag analyticsservice:latest ammar795/analyticsservice:latest
+        docker tag microservices-mysqldbservice:latest ammar795/microservices-mysqldbservice:latest
+        docker tag microservices-mongodbservice:latest ammar795/microservices-mongodbservice:latest
         docker push ammar795/authenticationservice:latest
         docker push ammar795/dataentryservice:latest
         docker push ammar795/showresultsservice:latest
         docker push ammar795/analyticsservice:latest
+        docker push ammar795/microservices-mysqldbservice:latest
+        docker push ammar795/microservices-mongodbservice:latest
