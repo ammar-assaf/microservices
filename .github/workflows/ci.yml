@@ -22,13 +22,11 @@ jobs:
           MYSQL_DATABASE: mydb
           MYSQL_USER: admin
           MYSQL_PASSWORD: Admin@123
-        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=5
-      
+
       mongo:
         image: mongo:latest
         ports:
           - 27017:27017
-        options: --health-cmd="mongo --eval 'db.runCommand({ ping: 1 })'" --health-interval=10s
 
     steps:
     - name: Checkout code
@@ -38,7 +36,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: 18
-        distribution: 'temurin'  # Use 'temurin', 'adoptopenjdk', or other valid distributions
+        distribution: 'temurin'
 
     - name: Build Authentication Service
       run: |
