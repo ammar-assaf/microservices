@@ -16,8 +16,8 @@ public class AnalyticsService {
     private DataRepository dataRepository;
     @Autowired
     private ResultRepository resultRepository;
-//600000
-    @Scheduled(fixedRate = 1000)
+
+    @Scheduled(fixedRate = 600000) // 10 Minute
     public void performAnalytics() {
 
         Result result;

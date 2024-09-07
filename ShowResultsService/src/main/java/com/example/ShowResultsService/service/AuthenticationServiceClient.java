@@ -13,9 +13,6 @@ public class AuthenticationServiceClient {
 
     public boolean validateUser(String username, String password) {
         User user = new User(username, password);
-//        String url = "http://auth-service:8082/auth/login";
-//        String requestBody = "{\"username\":\"" + username + "\", \"password\":\"" + password + "\"}";
-//        return restTemplate.postForObject(url, requestBody, String.class);
         try {
             ResponseEntity<String> response = restTemplate.postForEntity(
                     "http://authenticationservice:8080/auth/login", user, String.class);
